@@ -25,11 +25,14 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var player = {
-    update: function(){
+    update: function (){
         //console.log('Player update call');
     },
-    render: function(){
+    render: function (){
         //console.log('Player render call');
+    },
+    handleInput: function () {
+        
     }
 };
 
