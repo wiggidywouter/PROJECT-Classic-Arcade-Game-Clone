@@ -1,12 +1,20 @@
+var ROWS = 5,
+    COLUMNS = 5,
+    FIRST_ROW_OFFSET_TOP = 68,
+    TILE_WIDTH = 101,
+    TILE_HEIGHT = 83,
+    CANVAS_WIDTH = TILE_WIDTH * COLUMNS;
+
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(speed, y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.x = 0;
-    this.y = 0;
+    this.x = 0 - TILE_WIDTH;
+    this.y = y;
+    this.speed = speed;
     this.sprite = 'images/enemy-bug.png';
 };
 
@@ -16,6 +24,14 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    
+    // Update position
+    this.x += this.speed * dt;
+    
+    // Goto starting position
+    if (this.x > CANVAS_WIDTH){
+        this.x = 0 - TILE_WIDTH;
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -27,46 +43,59 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(){
-    this.x = 202;
-    this.y = 400;
+    this.reset();
     this.sprite = 'images/char-boy.png';
 };
 
-Player.prototype.update = function (){
-    //console.log('Player update call');
+Player.prototype.reset = function (x, y){
+
+    this.x = TILE_WIDTH * 2;
+    this.y = FIRST_ROW_OFFSET_TOP + (TILE_HEIGHT * 4);
+
+};
+
+Player.prototype.update = function (x, y){
+
+    // Disallow player to go offscreen
+    if (x >= 0 && x <= TILE_WIDTH * 4 && y >= FIRST_ROW_OFFSET_TOP && y <= FIRST_ROW_OFFSET_TOP + (TILE_HEIGHT * 4)) {
+        this.x = x;
+        this.y = y;
+    }
 };
 
 Player.prototype.render = function (){
-    //console.log('Player render call');
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 Player.prototype.handleInput = function (keyCode) {
-    console.log(keyCode);
     switch (keyCode) {
         case 'up':
-            this.y -= 83;
+            this.update(this.x, this.y - TILE_HEIGHT);
             break;
         case 'down':
-            this.y += 83;
+            this.update(this.x, this.y + TILE_HEIGHT);
             break;
         case 'left':
-            this.x -= 101;
+            this.update(this.x - TILE_WIDTH, this.y);
             break;
         case 'right':
-            this.x += 101;
+            this.update(this.x + TILE_WIDTH, this.y);
             break;
 
     }
 };
 
-var player = new Player();
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [];
+var player = new Player();
+for (var row = 1; row < ROWS; row++) {
+    var enemy = new Enemy( (Math.random() * 200) + 100, FIRST_ROW_OFFSET_TOP + (TILE_HEIGHT * (row - 1) ));
+    allEnemies.push(enemy);
+};
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
