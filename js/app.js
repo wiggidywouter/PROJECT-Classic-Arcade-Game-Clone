@@ -1,8 +1,9 @@
 var ROWS = 5,
     COLUMNS = 5,
-    FIRST_ROW_OFFSET_TOP = 68,
+    FIRST_ROW_OFFSET_TOP = 65,
     TILE_WIDTH = 101,
     TILE_HEIGHT = 83,
+    ENTITY_WIDTH = TILE_WIDTH,
     CANVAS_WIDTH = TILE_WIDTH * COLUMNS;
 
 // Enemies our player must avoid
@@ -12,7 +13,7 @@ var Enemy = function(speed, y) {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.x = 0 - TILE_WIDTH;
+    this.x = 0 - ENTITY_WIDTH;
     this.y = y;
     this.speed = speed;
     this.sprite = 'images/enemy-bug.png';
@@ -28,9 +29,9 @@ Enemy.prototype.update = function(dt) {
     // Update position
     this.x += this.speed * dt;
     
-    // Goto starting position
+    // Go back to starting position
     if (this.x > CANVAS_WIDTH){
-        this.x = 0 - TILE_WIDTH;
+        this.x = 0 - ENTITY_WIDTH;
     }
 };
 
@@ -49,7 +50,7 @@ var Player = function(){
 
 Player.prototype.reset = function (x, y){
 
-    this.x = TILE_WIDTH * 2;
+    this.x = (TILE_WIDTH * 3) - ENTITY_WIDTH;
     this.y = FIRST_ROW_OFFSET_TOP + (TILE_HEIGHT * 4);
 
 };
@@ -90,12 +91,13 @@ Player.prototype.handleInput = function (keyCode) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [];
 var player = new Player();
+var allEnemies = [];
+
 for (var row = 1; row < ROWS; row++) {
     var enemy = new Enemy( (Math.random() * 200) + 100, FIRST_ROW_OFFSET_TOP + (TILE_HEIGHT * (row - 1) ));
     allEnemies.push(enemy);
-};
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

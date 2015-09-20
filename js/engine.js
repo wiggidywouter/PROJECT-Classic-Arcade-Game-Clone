@@ -99,8 +99,7 @@ var Engine = (function(global) {
 
     function checkCollisions(){
         allEnemies.forEach( function (enemy) {
-            if (enemy.y === player.y && player.x - enemy.x < TILE_WIDTH - 25 && player.x - enemy.x > - TILE_WIDTH + 25) {
-                console.log('BAMM!!!');
+            if (enemy.y === player.y && player.x - enemy.x < ENTITY_WIDTH - 25 && player.x - enemy.x > - ENTITY_WIDTH + 25) {
                 player.reset();
             }
         });
